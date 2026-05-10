@@ -27,6 +27,10 @@ yarn start     # Next.js dev server
 
 Open http://localhost:3000, connect a wallet, set a new greeting.
 
+## Deploying to a testnet
+
+Scaffold-ETH 2 reads RPC URLs from `packages/hardhat/.env` and `packages/nextjs/.env.local`. Recommended provider: Infura via [MetaMask Developer](https://developer.metamask.io). Set keys per network you target (e.g. `SEPOLIA_RPC_URL`, `LINEA_RPC_URL`), then `yarn deploy --network sepolia` and update `packages/nextjs/scaffold.config.ts` to include the chain.
+
 ## What's in here
 
 This repo contains the customizations on top of the default Scaffold-ETH 2 starter:
