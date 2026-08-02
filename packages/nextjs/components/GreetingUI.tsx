@@ -10,6 +10,7 @@ export function GreetingUI() {
   const { address } = useAccount();
   const [newGreeting, setNewGreeting] = useState("");
   const [sendValue, setSendValue] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const { data: greeting } = useScaffoldReadContract({
     contractName: "YourContract",
@@ -30,12 +31,22 @@ export function GreetingUI() {
   const { writeContractAsync, isMining } = useScaffoldWriteContract("YourContract");
 
   const handleSetGreeting = async () => {
-    await writeContractAsync({
-      functionName: "setGreeting",
-      args: [newGreeting],
-      value: sendValue ? parseEther("0.001") : undefined,
-    });
-    setNewGreeting("");
+    setError(null);
+    try {
+      await writeContractAsync({
+        functionName: "setGreeting",
+        args: [newGreeting],
+        value: sendValue ? parseEther("0.001") : undefined,
+      });
+      // Only clear the input once the write actually went through.
+      setNewGreeting("");
+    } catch (e) {
+      // A rejected signature or a failed transaction lands here. Show it to the
+      // user instead of letting the promise reject unhandled, and keep the typed
+      // greeting so it does not have to be retyped.
+      console.error("Failed to set greeting:", e);
+      setError(e instanceof Error ? e.message : "Failed to set greeting. Please try again.");
+    }
   };
 
   return (
@@ -64,6 +75,8 @@ export function GreetingUI() {
           {isMining ? "Mining…" : "Set Greeting"}
         </button>
       </div>
+
+      {error && <p className="text-error text-sm max-w-md text-center break-words">{error}</p>}
     </div>
   );
 }
