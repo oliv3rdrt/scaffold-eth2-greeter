@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import "hardhat/console.sol";
-
 contract YourContract {
     address public immutable owner;
     string public greeting;
@@ -23,7 +21,6 @@ contract YourContract {
     }
 
     function setGreeting(string memory _newGreeting) public payable {
-        console.log("Setting new greeting '%s' from %s", _newGreeting, msg.sender);
         greeting = _newGreeting;
         totalCounter++;
         userGreetingCounter[msg.sender]++;
