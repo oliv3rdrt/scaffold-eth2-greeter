@@ -4,7 +4,9 @@ pragma solidity ^0.8.24;
 contract YourContract {
     address public immutable owner;
     string public greeting;
-    bool public premium;
+    // Whether each user's most recent greeting was a paid (premium) one. Tracked
+    // per user so a free greeting from one account cannot clear another's flag.
+    mapping(address => bool) public userPremium;
     uint256 public totalCounter;
     mapping(address => uint256) public userGreetingCounter;
 
@@ -24,7 +26,7 @@ contract YourContract {
         greeting = _newGreeting;
         totalCounter++;
         userGreetingCounter[msg.sender]++;
-        premium = msg.value > 0;
+        userPremium[msg.sender] = msg.value > 0;
         emit GreetingChange(msg.sender, _newGreeting, msg.value > 0, msg.value);
     }
 
